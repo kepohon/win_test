@@ -1,0 +1,5 @@
+winmenu.c	ウィンドウズメニュー付きPGのソースファイル
+menu.rc		メニューのリソースファイル
+
+> windres menu.rc menu.o
+> g++ winmenu.cpp menu.o -mwindows -o winmenu.exe
