@@ -3,28 +3,30 @@
 
 .SUFFIXES:	.cpp .rc
 
-NAME=winmenu
+NAME=appli
 
 PROG=${NAME}.exe
 SRC=${NAME}.cpp
 OBJS=$(SRC:.cpp=.o)
 
-RSRC=resource
-HEAD=${RSRC}.h
+#RSRC=resource
+#HEAD=${RSRC}.h
 # .rcファイルのエンコーディングはShift-JISでないとコンパイルできない(windresの仕様)
-RCS=${RSRC}.rc
-OBJS+=$(RCS:.rc=.o)
+#RCS=${RSRC}.rc
+#OBJS+=$(RCS:.rc=.o)
 
 
 CC=g++
 RESCOM=windres
 
-CFLAGS=-Wall -O3
+#CFLAGS=-Wall -O3
 # ソースファイルがUTF-8のときに使用する
-#CFLAGS=-Wall -O3 -finput-charset=utf-8 -fexec-charset=CP932
+CFLAGS=-Wall -O3 -finput-charset=utf-8 -fexec-charset=CP932
 
 # libwinmm.a をリンクしたい場合次のように"-lwinmm"を追加する
-LDFLAGS=-mwindows -lwinmm
+#LDFLAGS=-mwindows -lwinmm
+#LDFLAGS=-mwindows -lmingw32
+LDFLAGS=-mwindows
 
 RM=del
 
@@ -33,7 +35,7 @@ RM=del
 all: $(PROG)
 
 $(PROG): $(OBJS)
-	$(CC) $(OBJS) $(LDFLAGS) -o $@
+	$(CC) $(OBJS) ${CFLAGS} $(LDFLAGS) -o $@
 
 
 %.o: %.cpp ${HEAD}
@@ -41,14 +43,15 @@ $(PROG): $(OBJS)
 #.cpp.o :
 #	$(CC) $(CFLAGS) -o $@ -c $<
 
-%.o: %.rc ${HEAD}
-	${RESCOM} $< $@
+#%.o: %.rc ${HEAD}
+#	${RESCOM} $< $@
 #.rc.o :
 #	$(RESCOM) $< $@
 
 .PHONY : clean run
 clean:
 	$(RM) $(OBJS)
+	$(RM) $(PROG)
 
 run:
 	${PROG}
