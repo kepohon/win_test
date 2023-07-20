@@ -11,6 +11,7 @@ OBJS=$(SRC:.cpp=.o)
 
 RSRC=resource
 HEAD=${RSRC}.h
+# .rcファイルのエンコーディングはShift-JISでないとコンパイルできない(windresの仕様)
 RCS=${RSRC}.rc
 OBJS+=$(RCS:.rc=.o)
 

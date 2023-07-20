@@ -1,4 +1,5 @@
 // winmain.cpp (Shift-JIS)
+//	リソースコンパイラのwindressはShift-Jis形式のファイルでないとコンパイルできないので、他のファイルもShift-JISで統一した
 //	2023/05/15 by kepohon
 //	2023/05/20 key by kepohon
 //	2023/05/21 keyUp,keyDown,mouse by kepohon
@@ -10,6 +11,7 @@
 #include	<time.h>
 #include	<mmsystem.h>	// libwinmm.a を使うためのヘッダーファイル 
 #include	"resource.h"
+#include	"apri.h"
 
 #define	ID_MYTIMER	100
 
@@ -48,22 +50,24 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	hInst = hInstance;
 
     // ウィンドウの作成
-    if (!CreateMainWindow(hInstance, nCmdShow))
+    if (!CreateMainWindow(hInstance, nCmdShow)){
         return false;
+	}
 
     // メイン メッセージループ
     int done = 0;
     while (!done)
     {
         // PeekMessage is a non-blocking method for checking for Windows messages.
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) 
-        {
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
             if (msg.message == WM_QUIT)		// QUITメッセージなら終了
                 done = 1;
 
             TranslateMessage(&msg);			//decode and pass messages on to WindowProc
             DispatchMessage(&msg);
-        }
+        } else {
+			// ゲームのようなリアルタイム処理は、ここで行う
+		}
     }
     return msg.wParam;
 }
