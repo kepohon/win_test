@@ -1,15 +1,20 @@
+//
 // winmain.cpp (Shift-JIS)
 //	ウィンドウズプログラミングの基本雛形
+//
+//	2023/07/21 by kepohon	// 二重起動チェック
 //	2023/07/20 by kepohon
 
 #define WIN32_LEAN_AND_MEAN	// 不要なヘッダファイルのインクルードを抑止してコンパイル時間を短縮できる
 
 #include	<windows.h>
+//#include <Mmsystem.h>
 #include	"appli.h"
 
 // プロトタイプ宣言
 bool	CreateMainWindow(HINSTANCE, int); 
 LRESULT WINAPI	WindowProc( HWND, UINT, WPARAM, LPARAM );
+bool	AnotherInstance();		// 二重起動チェック
 
 /*
 int WINAPI		WinMain(HINSTANCE, HINSTANCE, LPSTR, int); 
@@ -25,6 +30,17 @@ int WINAPI	WinMain( HINSTANCE hInstance,
                     int       nCmdShow)
 {
     MSG	 msg;
+
+	// 二重起動チェック
+	if ( AnotherInstance() )
+	{
+		MessageBox(	NULL,
+					TEXT("二重起動はできません"),
+					TEXT("警告！"),
+					MB_OK
+		);
+		return false;
+	}
 
     // ウィンドウの作成
     if (!CreateMainWindow(hInstance, nCmdShow)){
@@ -131,6 +147,27 @@ LRESULT WINAPI	WindowProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		return DefWindowProc( hWnd, msg, wParam, lParam );
     }
     return 0;
+}
+
+//=============================================================================
+// 二重起動のチェック
+//=============================================================================
+bool AnotherInstance()
+{
+	HANDLE ourMutex;
+
+	// Attempt to create a mutex using our unique string
+	ourMutex = CreateMutex(	NULL,
+							true,
+							"Use_a_different_string_here_for_each_program_48161-XYZZY"
+							);
+
+	if (GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		return true;            // another instance was found
+	}
+
+	return false;               // we are the only instance
 }
 
 
